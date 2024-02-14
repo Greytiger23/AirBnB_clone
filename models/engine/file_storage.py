@@ -1,9 +1,13 @@
 #!/usr/bin/python3
-import json
-from json import dump
-from json import load
-from models.base_model import BaseModel
 """module that defines the FileStorage class"""
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import json
 
 
 class FileStorage:
@@ -25,18 +29,18 @@ class FileStorage:
         a = {}
         for key, obj in FileStorage.__objects.items():
             a[key] = obj.to_dict()
-        with open(FileStorage.__file_path, 'w', encoding="utf-8") as file:
-            dump(a, file)
+        with open(FileStorage.__file_path, 'w') as file:
+            json.dump(a, file)
 
     def reload(self):
         """public instance method"""
-        c = {'BaseModel': BaseModel}
         try:
-            with open(FileStorage.__file_path, encoding="utf-8") as file:
-                s = load(file)
-                for value in s.values():
+            with open(FileStorage.__file_path) as file:
+                a = json.load(file)
+                for value in a.values():
                     class_name = value["__class__"]
-                    class_obj = c[class_name]
-                    self.new(class_obj(**value))
+                    del value["__class__"]
+                    n = eval(class_name)
+                    self.new(n(**value))
         except FileNotFoundError:
             pass

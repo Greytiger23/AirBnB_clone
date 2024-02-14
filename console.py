@@ -1,13 +1,30 @@
 #!/usr/bin/python3
-import cmd
-import sys
-import models
 """module that defines the class"""
+import cmd
+import re
+from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.state import State
+from models.review import Review
+from shlex import split
 
 
 class HBNBCommand(cmd.Cmd):
     """represents the class"""
     prompt = "(hbnb) "
+    _classes = {
+            "BaseModel",
+            "City",
+            "User",
+            "Place",
+            "Amenity",
+            "Review",
+            "State"
+            }
 
     def do_quit(self, arg):
         """exit program"""
@@ -29,10 +46,10 @@ class HBNBCommand(cmd.Cmd):
             return
         a = arg.split()
         c = a[0]
-        if c not in models.classes:
+        if c not in HBNBCommand._classes:
             print("** class doesn't exist **")
             return
-        n = models.classes[c]()
+        n = HBNBCommand._classes[c]()
         n.save()
         print(n.id)
 
@@ -43,7 +60,7 @@ class HBNBCommand(cmd.Cmd):
             return
         a = arg.split()
         c = a[0]
-        if c not in models.classes:
+        if c not in HBNBCommand._classes:
             print("** class doesn't exist **")
             return
         if len(a) < 2:
@@ -63,7 +80,7 @@ class HBNBCommand(cmd.Cmd):
             return
         a = arg.split()
         c = a[0]
-        if c not in models.classes:
+        if c not in HBNBCommand._classes:
             print("** class doesn't exist **")
             return
         if len(a) < 2:
@@ -80,7 +97,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """prints all string"""
         if arg:
-            if arg not in models.classes:
+            if arg not in HBNBCommand._classes:
                 print("** class doesn't exist **")
                 return
             o = [str(obj) for key, obj in models.storage.all() if key.split(
@@ -96,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
             return
         a = shlex.split(arg)
         c = a[0]
-        if c not in models.classes:
+        if c not in HBNBCommand._classes:
             print("** class doesn't exist **")
             return
         if len(a) < 2:
