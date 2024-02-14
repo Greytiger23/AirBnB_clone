@@ -2,6 +2,7 @@
 import json
 from json import dump
 from json import load
+from models.base_model import BaseModel
 """module that defines the FileStorage class"""
 
 
@@ -29,13 +30,13 @@ class FileStorage:
 
     def reload(self):
         """public instance method"""
+        c = {'BaseModel': BaseModel}
         try:
             with open(FileStorage.__file_path, encoding="utf-8") as file:
                 s = load(file)
                 for value in s.values():
-                    class_name = value['__class__']
-                    if isinstance(class_name, str) and type(
-                            eval(class_name) == type:
-                        self.new(eval(class_name)(**value))
+                    class_name = value["__class__"]
+                    class_obj = c[class_name]
+                    self.new(class_obj(**value))
         except FileNotFoundError:
             pass
