@@ -23,7 +23,7 @@ class BaseModel:
 
     def __str__(self):
         """public method"""
-        return "[{}] ({}) {}".format(
+        return "[{}] ({]) {}".format(
                 self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
@@ -32,8 +32,11 @@ class BaseModel:
 
     def to_dict(self):
         """punlic instance method"""
-        obj_dict = self.__dict__.copy()
-        obj_dict['__class__'] = self.__class__.__name__
-        obj_dict['created_at'] = self.created_at.isoformat()
-        obj_dict['updated_at'] = self.updated_at.isoformat()
+        obj_dict = {}
+        obj_dict["__class__"] = self.__class__.__name__
+        for key, value in self.__dict__.items():
+            if isinstance(value, datetime):
+                obj_dict[key] = value.isoformat()
+            else:
+                obj_dict[key] = value
         return obj_dict
