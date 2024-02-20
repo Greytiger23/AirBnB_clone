@@ -5,3 +5,7 @@ footer {
 	align-items: center;
 	justify-content: center;
 }
+
+footer .footer-content {
+	color: white;
+}
